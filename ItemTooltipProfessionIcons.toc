@@ -1,0 +1,8 @@
+## Interface: 11302
+## Version: 1.0
+## Title: ItemTooltipProfessionIcons
+## Notes: Displays which professions may use the item via the item's tooltip
+## Author: Bytespire
+
+ItemProfConstants.lua
+ItemTooltipProfessionIcons.lua
