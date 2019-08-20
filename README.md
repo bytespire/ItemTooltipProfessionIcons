@@ -8,7 +8,7 @@ Item tooltips are modified to display icons of the professions that can use the 
  
 **In-progress feature:**
 - Classic appears to have numerous quests that require trade items to complete
-- Display a quest icon within an item's tooltip to indicate if it is required for an incompleted quest (ie. only the normal tradable items such beast parts for cooking quests, frost oil, hillman's cloak). These items could have some demand on the AH?
+- Display a quest icon within an item's tooltip to indicate if it is required for an incompleted quest (ie. only the normal tradable items such beast parts for cooking quests, frost oil, hillman's cloak). Tradable quest items could have some demand on the AH?
 <br>
 
 *Warning: not yet tested within the classic client*
