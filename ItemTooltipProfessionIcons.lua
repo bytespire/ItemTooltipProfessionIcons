@@ -13,14 +13,12 @@ local PROF_TEXTURES = ItemProfConstants.PROF_TEXTURES
 
 local function CreateItemIcons( itemFlags )
 
-	--print( "item flags: " .. itemFlags )
 	local t = {}
 	for i=0, NUM_PROFS_TRACKED do
 	
 		local bitMask = bit.lshift( 1, i )
 		local isSet = bit.band( itemFlags, bitMask )
 		if isSet ~= 0 then
-		--	t[ #t+1 ] = "|T"..PROF_TEXTURES[ bitMask ]..":16|t "
 			t[ #t+1 ] = "|T"
 			t[ #t+1 ] = PROF_TEXTURES[ bitMask ]
 			t[ #t+1 ] = ":"
@@ -34,9 +32,14 @@ end
 
 
 local function ModifyItemTooltip( tt ) 
-	
-	local itemName = select( 1, tt:GetItem() )
+		
+	local itemName, itemLink = tt:GetItem() 
 	local itemID = select( 1, GetItemInfoInstant( itemName ) )
+	
+	if itemID == nil then
+		-- Extract ID from link: GetItemInfoInstant unreliable with AH items (uncached on client?)
+		itemID = tonumber( string.match( itemLink, ":?(%d+):" ) )
+	end
 	
 	-- Reuse the texture state if the item hasn't changed
 	if previousItemID == itemID then
