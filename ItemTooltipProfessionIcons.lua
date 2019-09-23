@@ -89,6 +89,7 @@ end
 local function ModifyItemTooltip( tt ) 
 		
 	local itemName, itemLink = tt:GetItem() 
+	if not itemName then return end
 	local itemID = select( 1, GetItemInfoInstant( itemName ) )
 	
 	if itemID == nil then
