@@ -227,6 +227,7 @@ ItemProfConstants.ITEM_PROF_FLAGS = {
 [ 4363 ] = ENG,
 [ 4364 ] = ENG,
 [ 4368 ] = ENG,
+[ 4369 ] = HORDE,
 [ 4371 ] = ENG + ALLI + ROGUE,		--q
 [ 4375 ] = ENG,
 [ 4377 ] = ENG,
