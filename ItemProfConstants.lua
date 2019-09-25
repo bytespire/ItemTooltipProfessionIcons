@@ -293,6 +293,7 @@ ItemProfConstants.ITEM_PROF_FLAGS = {
 [ 6317 ] = COOK,
 [ 6338 ] = ENC,
 [ 6358 ] = ALC,
+[ 6359 ] = ALC,
 [ 6361 ] = COOK,
 [ 6362 ] = COOK,
 [ 6370 ] = ALC + ENC,
