@@ -13,8 +13,6 @@ Item tooltips are modified to display icons of the professions that can use the 
 - Added a configuration dialog which allows the user to control which profession icons are displayed, control which faction/class/profession quest items are tracked, modify the icon size and toggle icons for items obtained via vendors
 <br>
 
-*Warning: not yet tested within the classic client*
-
 
 # Download:
 
