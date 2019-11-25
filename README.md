@@ -7,10 +7,10 @@ Item tooltips are modified to display icons of the professions that can use the 
 <br><br>
 
 
-**New feature:**
-- Classic appears to have numerous quests that require trade items to complete
-- Display a quest icon within an item's tooltip to indicate if it is required for a quest (ie. only the normal tradable items such beast parts for cooking quests, frost oil, hillman's cloak). Tradable quest items could have some demand on the AH?
-- Added a configuration dialog which allows the user to control which profession icons are displayed, control which faction/class/profession quest items are tracked, modify the icon size and toggle icons for items obtained via vendors
+**Additional features:**
+- Classic appears to have numerous quests that require trade items to complete. Display a quest icon within an item's tooltip to indicate if it is required for a quest (ie. only the normal tradable items such beast parts for cooking quests, frost oil, hillman's cloak). Tradable quest items could have some demand on the AH
+- Configuration dialog which allows the user to control which profession icons are displayed, control which faction/class/profession quest items are tracked, modify the icon size and toggle icons for items obtained via vendors
+- Tracking items that can be exchanged for Darkmoon Faire Prize Tickets. These items may have some demand/value once the faire becomes available
 <br>
 
 
