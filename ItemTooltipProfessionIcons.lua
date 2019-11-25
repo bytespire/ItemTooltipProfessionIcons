@@ -6,7 +6,10 @@ local previousItemID = -1
 local itemIcons = ""
 local iconSize
 
+local ITEM_VENDOR_FLAG = ItemProfConstants.VENDOR_ITEM_FLAG
+local ITEM_DMF_FLAG = ItemProfConstants.DMF_ITEM_FLAG
 local ITEM_PROF_FLAGS = ItemProfConstants.ITEM_PROF_FLAGS
+local QUEST_FLAG = ItemProfConstants.QUEST_FLAG
 local NUM_PROFS_TRACKED = ItemProfConstants.NUM_PROF_FLAGS
 local PROF_TEXTURES = ItemProfConstants.PROF_TEXTURES
 
@@ -15,6 +18,7 @@ local showQuests
 local profFilter
 local questFilter
 local includeVendor
+local showDMF
 
 ItemProfConstants.configTooltipIconsRealm = GetRealmName()
 ItemProfConstants.configTooltipIconsChar = UnitName( "player" )
@@ -26,7 +30,7 @@ local function CreateItemIcons( itemFlags )
 	
 	if not includeVendor then
 		-- Return if the item has the vendor flag
-		local isVendor = bit.band( itemFlags, 0x100 )
+		local isVendor = bit.band( itemFlags, ITEM_VENDOR_FLAG )
 		if isVendor ~= 0 then
 			return nil
 		end
@@ -51,9 +55,20 @@ local function CreateItemIcons( itemFlags )
 		end
 	end
 	
+	if showDMF then
+	
+		local isTicketItem = bit.band( itemFlags, ITEM_DMF_FLAG )
+		if isTicketItem ~= 0 then
+			t[ #t+1 ] = "|T"
+			t[ #t+1 ] = PROF_TEXTURES[ ITEM_DMF_FLAG ]
+			t[ #t+1 ] = ":"
+			t[ #t+1 ] = iconSize
+			t[ #t+1 ] = "|t "
+		end
+	end
 	
 	if showQuests then
-		-- Quest filter flags start at 0x200, shift to 0 will align with config filter
+		-- Quest filter flags start at 0x200, shift to bit 0 will align with config filter
 		local questFlags = bit.rshift( itemFlags, 9 )
 		local isSet = bit.band( questFlags, questFilter )
 		
@@ -75,7 +90,7 @@ local function CreateItemIcons( itemFlags )
 		
 		if isSet ~= 0 then
 			t[ #t+1 ] = "|T"
-			t[ #t+1 ] = PROF_TEXTURES[ 0x200 ]
+			t[ #t+1 ] = PROF_TEXTURES[ QUEST_FLAG ]
 			t[ #t+1 ] = ":"
 			t[ #t+1 ] = iconSize
 			t[ #t+1 ] = "|t "
@@ -94,7 +109,11 @@ local function ModifyItemTooltip( tt )
 	
 	if itemID == nil then
 		-- Extract ID from link: GetItemInfoInstant unreliable with AH items (uncached on client?)
-		itemID = tonumber( string.match( itemLink, ":?(%d+):" ) )
+		itemID = tonumber( string.match( itemLink, "item:?(%d+):" ) )
+		if itemID == nil then
+			-- The item link doesn't contain the item ID field
+			return
+		end
 	end
 	
 	-- Reuse the texture state if the item hasn't changed
@@ -104,7 +123,7 @@ local function ModifyItemTooltip( tt )
 	end
 	
 	-- Check if the item is a profession reagent
-	local itemFlags = ITEM_PROF_FLAGS[ itemID ];
+	local itemFlags = ITEM_PROF_FLAGS[ itemID ]
 	if itemFlags == nil then
 		-- Don't modify the tooltip
 		return
@@ -126,6 +145,7 @@ function ItemProfConstants:ConfigChanged()
 	questFilter = ItemTooltipIconsConfig[ ItemProfConstants.configTooltipIconsRealm ][ ItemProfConstants.configTooltipIconsChar ].questFlags
 	includeVendor = ItemTooltipIconsConfig[ ItemProfConstants.configTooltipIconsRealm ][ ItemProfConstants.configTooltipIconsChar ].includeVendor
 	iconSize = ItemTooltipIconsConfig[ ItemProfConstants.configTooltipIconsRealm ][ ItemProfConstants.configTooltipIconsChar ].iconSize
+	showDMF = ItemTooltipIconsConfig[ ItemProfConstants.configTooltipIconsRealm ][ ItemProfConstants.configTooltipIconsChar ].showDMF
 	
 	previousItemID = -1		-- Reset line
 end
@@ -133,8 +153,8 @@ end
 
 local function InitFrame()
 
-	GameTooltip:HookScript("OnTooltipSetItem", ModifyItemTooltip )
-	ItemRefTooltip:HookScript( "OnTooltipSetItem", ModifyItemTooltip )
+	GameTooltip:HookScript( "OnTooltipSetItem", ModifyItemTooltip )
+	--ItemRefTooltip:HookScript( "OnTooltipSetItem", ModifyItemTooltip )
 end
 
 
