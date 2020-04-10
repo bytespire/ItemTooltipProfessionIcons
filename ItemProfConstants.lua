@@ -434,6 +434,7 @@ ItemProfConstants.ITEM_PROF_FLAGS = {
 [ 10560 ] = ENG + Q,	--q
 [ 10561 ] = ENG + Q,	--q
 [ 10562 ] = Q,
+[ 10575 ] = Q,
 [ 10576 ] = ENG,
 [ 10577 ] = ENG,
 [ 10586 ] = ENG,
