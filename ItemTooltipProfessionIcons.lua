@@ -68,8 +68,8 @@ local function CreateItemIcons( itemFlags )
 	end
 	
 	if showQuests then
-		-- Quest filter flags start at 0x200, shift to bit 0 will align with config filter
-		local questFlags = bit.rshift( itemFlags, 9 )
+		-- Quest filter flags start at 0x400, shift to bit 0 will align with config filter
+		local questFlags = bit.rshift( itemFlags, 10 )
 		local isSet = bit.band( questFlags, questFilter )
 		
 		-- Check if the quest is faction exclusive
