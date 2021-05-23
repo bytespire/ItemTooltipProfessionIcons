@@ -31,12 +31,14 @@ local ENC_Q = 	0x4000000
 local ENG_Q = 	0x8000000
 local LW_Q =	0x10000000
 local TAIL_Q =	0x20000000
-local DMF =		0x40000000
+local JC_Q =    0x40000000
+local DMF =		0x80000000
 
 ItemProfConstants.VENDOR_ITEM_FLAG = VENDOR
 ItemProfConstants.DMF_ITEM_FLAG = DMF
 ItemProfConstants.QUEST_FLAG = Q
 ItemProfConstants.NUM_PROF_FLAGS = 9	-- Num professions tracked
+ItemProfConstants.NUM_QUEST_FLAGS = 20	-- Ignoring default Q mask
 
 ItemProfConstants.PROF_TEXTURES = {
 [ COOK ] = GetSpellTexture( 2550 ),
