@@ -1,9 +1,25 @@
-## Interface: 20501
-## Version: 1.2
+## Interface: 90207
+## Interface-Mainline: 90207
+## Interface-BCC: 20504
+## Interface-Wrath: 30400
+## Interface-Classic: 11403
 ## Title: ItemTooltipProfessionIcons
 ## Notes: Displays which professions and quests may use the item via the item's tooltip
 ## Author: Bytespire
 ## SavedVariables: ItemTooltipIconsConfig
+#@version-retail@
+## Version: @project-version@-Retail
+#@end-version-retail@
+#@version-wrath@
+## Version: @project-version@-Wrath
+#@end-version-wrath@
+#@version-bcc@
+## Version: @project-version@-BCC
+#@end-version-bcc@
+#@version-classic@
+## Version: @project-version@-Classic
+#@end-version-classic@
+
 
 ItemProfConstants.lua
 ItemTooltipProfessionIcons.lua
