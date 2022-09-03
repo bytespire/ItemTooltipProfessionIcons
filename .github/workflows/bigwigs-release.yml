@@ -1,0 +1,39 @@
+name: Package & release with BigWigsMods packager
+
+on: workflow_dispatch
+
+
+jobs:
+
+  release:
+  
+    runs-on: ubuntu-latest
+    
+    env:
+      GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+
+      # Create a package zip of each game version defined in the toc file
+      # Prevent uploading to curse/wago/wow interface
+      - name: Package and release (retail)         
+        uses: BigWigsMods/packager@master
+        with:
+          args: -g retail -n '{package-name}-retail' -m 'retail/.pkgmeta'
+          
+      - name: Package and release (wrath)
+        uses: BigWigsMods/packager@master
+        with:
+          args: -g wrath -n '{package-name}{classic}' -m 'wrath/.pkgmeta'
+          
+      - name: Package and release (tbc)
+        uses: BigWigsMods/packager@master
+        with:
+          args: -g bcc -n '{package-name}{classic}' -m 'bcc/.pkgmeta'
+
+      - name: Package and release (vanilla)
+        uses: BigWigsMods/packager@master
+        with:
+          args: -g classic -n '{package-name}{classic}' -m 'classic/.pkgmeta'
