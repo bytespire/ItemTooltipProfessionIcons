@@ -1,0 +1,13 @@
+ignore:
+  - classic
+  - retail
+  - wrath
+  - README.md
+  - CHANGELOG.md
+
+move-folders:
+  ItemTooltipProfessionIcons/bcc: ItemTooltipProfessionIcons
+
+manual-changelog:
+  filename: CHANGELOG.md
+  markup-type: plain
