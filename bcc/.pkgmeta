@@ -3,7 +3,6 @@ ignore:
   - retail
   - wrath
   - README.md
-  - CHANGELOG.md
 
 move-folders:
   ItemTooltipProfessionIcons/bcc: ItemTooltipProfessionIcons
