@@ -1,5 +1,5 @@
 # ItemTooltipProfessionIcons
-**An addon for World of Warcraft: Classic**
+**An addon for World of Warcraft: Classic (Vanilla, TBC & Wrath)**
 
 I created this addon to help me filter which items to keep/vendor/trade.
 
