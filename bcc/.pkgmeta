@@ -9,4 +9,4 @@ move-folders:
 
 manual-changelog:
   filename: CHANGELOG.md
-  markup-type: plain
+  markup-type: markdown
