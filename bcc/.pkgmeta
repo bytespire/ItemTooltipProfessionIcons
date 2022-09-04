@@ -8,5 +8,5 @@ move-folders:
   ItemTooltipProfessionIcons/bcc: ItemTooltipProfessionIcons
 
 manual-changelog:
-  filename: CHANGELOG.md
+  filename: ../CHANGELOG.md
   markup-type: markdown
