@@ -680,6 +680,7 @@ ItemProfConstants.ITEM_PROF_FLAGS = {
 [ 21887 ] = BS + ENG + LW + TAIL,
 [ 21929 ] = ALC + ENG + JC,
 [ 22202 ] = BS,
+[ 22203 ] = BS,
 [ 22445 ] = BS + ENC + ENG + LW + TAIL,
 [ 22446 ] = ENC + TAIL,
 [ 22447 ] = ENC,
