@@ -1,7 +1,7 @@
 ## Interface: 90207
 ## Interface-Mainline: 90207
 ## Interface-BCC: 20504
-## Interface-Wrath: 30400
+## Interface-Wrath: 30402
 ## Interface-Classic: 11404
 ## Title: ItemTooltipProfessionIcons
 ## Notes: Displays which professions and quests may use the item via the item's tooltip
