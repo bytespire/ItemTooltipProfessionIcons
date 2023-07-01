@@ -593,6 +593,7 @@ ItemProfConstants.ITEM_PROF_FLAGS = {
 [ 17034 ] = ENC + VENDOR,
 [ 17035 ] = ENC + VENDOR,
 [ 17194 ] = COOK + VENDOR,
+[ 17196 ] = COOK + VENDOR,
 [ 17202 ] = ENG + VENDOR,
 [ 17203 ] = BS,		--q BS
 [ 18240 ] = LW + TAIL + Q,
@@ -646,5 +647,6 @@ ItemProfConstants.ITEM_PROF_FLAGS = {
 [ 21071 ] = COOK,
 [ 21153 ] = COOK,
 [ 22202 ] = BS,
+[ 22203 ] = BS,
 [ 22682 ] = BS + LW + TAIL
 }
