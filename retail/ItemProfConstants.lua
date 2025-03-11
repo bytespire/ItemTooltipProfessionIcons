@@ -30,16 +30,16 @@ ItemProfConstants.VENDOR_ITEM_FLAG = VENDOR
 ItemProfConstants.NUM_PROF_FLAGS = 10	-- Num professions tracked
 
 ItemProfConstants.PROF_TEXTURES = {
-[ COOK ] = GetSpellTexture( 2550 ),
-[ FAID ] = GetSpellTexture( 3273 ),
-[ ALC ] = GetSpellTexture( 2259 ),
-[ BS ] = GetSpellTexture( 2018 ),
-[ ENC ] = GetSpellTexture( 7411 ),
-[ ENG ] = GetSpellTexture( 4036 ),
-[ LW ] = GetSpellTexture( 2108 ),
-[ TAIL ] = GetSpellTexture( 3908 ),
-[ INS ] = GetSpellTexture( 45357 ),
-[ JC ] = GetSpellTexture( 25229 )
+[ COOK ] = C_Spell.GetSpellTexture( 2550 ),
+[ FAID ] = C_Spell.GetSpellTexture( 3273 ),
+[ ALC ] = C_Spell.GetSpellTexture( 2259 ),
+[ BS ] = C_Spell.GetSpellTexture( 2018 ),
+[ ENC ] = C_Spell.GetSpellTexture( 7411 ),
+[ ENG ] = C_Spell.GetSpellTexture( 4036 ),
+[ LW ] = C_Spell.GetSpellTexture( 2108 ),
+[ TAIL ] = C_Spell.GetSpellTexture( 3908 ),
+[ INS ] = C_Spell.GetSpellTexture( 45357 ),
+[ JC ] = C_Spell.GetSpellTexture( 25229 )
 }
 
 -- Mapping the item IDs to texture indices
