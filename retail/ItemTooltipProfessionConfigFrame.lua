@@ -188,7 +188,7 @@ local function CreateIconResizeWidgets()
 
 	iconDemoTexture = frame:CreateTexture( nil, "OVERLAY" )
 	iconDemoTexture:SetPoint( "TOPLEFT", 300, -300 )
-	iconDemoTexture:SetTexture( GetSpellTexture( 4036 ) )
+	iconDemoTexture:SetTexture( C_Spell.GetSpellTexture( 4036 ) )
 end
 
 
@@ -210,4 +210,11 @@ frame:SetScript( "OnEvent", InitVariables )
 frame:RegisterEvent( "VARIABLES_LOADED" )
 
 
-InterfaceOptions_AddCategory( frame )
+--InterfaceOptions_AddCategory( frame )
+
+if InterfaceOptions_AddCategory then
+		InterfaceOptions_AddCategory(frame)
+	else
+		local category, layout = _G.Settings.RegisterCanvasLayoutCategory(frame, frame.name)
+		_G.Settings.RegisterAddOnCategory(category)
+	end

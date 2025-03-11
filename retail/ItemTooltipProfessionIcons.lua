@@ -54,8 +54,22 @@ local function CreateItemIcons( itemFlags )
 end
 
 
-local function ModifyItemTooltip( tt ) 
+function ItemProfConstants:ConfigChanged()
+
+	showProfs = ItemTooltipIconsConfig[ ItemProfConstants.configTooltipIconsRealm ][ ItemProfConstants.configTooltipIconsChar ].showProfs
+	profFilter = ItemTooltipIconsConfig[ ItemProfConstants.configTooltipIconsRealm ][ ItemProfConstants.configTooltipIconsChar ].profFlags
+	includeVendor = ItemTooltipIconsConfig[ ItemProfConstants.configTooltipIconsRealm ][ ItemProfConstants.configTooltipIconsChar ].includeVendor
+	iconSize = ItemTooltipIconsConfig[ ItemProfConstants.configTooltipIconsRealm ][ ItemProfConstants.configTooltipIconsChar ].iconSize
 	
+	previousItemID = -1		-- Reset line
+end
+
+
+local function ModifyItemTooltip( tt ) 
+	if not tt.GetItem then
+		--ignore ShoppingTooltip1 from ArkInventory
+		return
+	end
 	local itemName, itemLink = tt:GetItem() 
 	if not itemName then return end
 	local itemID = select( 1, GetItemInfoInstant( itemName ) )
@@ -89,21 +103,17 @@ local function ModifyItemTooltip( tt )
 	tt:AddLine( itemIcons )
 end
 
-
-function ItemProfConstants:ConfigChanged()
-
-	showProfs = ItemTooltipIconsConfig[ ItemProfConstants.configTooltipIconsRealm ][ ItemProfConstants.configTooltipIconsChar ].showProfs
-	profFilter = ItemTooltipIconsConfig[ ItemProfConstants.configTooltipIconsRealm ][ ItemProfConstants.configTooltipIconsChar ].profFlags
-	includeVendor = ItemTooltipIconsConfig[ ItemProfConstants.configTooltipIconsRealm ][ ItemProfConstants.configTooltipIconsChar ].includeVendor
-	iconSize = ItemTooltipIconsConfig[ ItemProfConstants.configTooltipIconsRealm ][ ItemProfConstants.configTooltipIconsChar ].iconSize
-	
-	previousItemID = -1		-- Reset line
-end
-
+-- Replace 'Enum.TooltipDataType.Item' with an appropriate type for the tooltip
+-- data you are wanting to process; eg. use 'Enum.TooltipDataType.Spell' for
+-- replacing usage of OnTooltipSetSpell.
+--
+-- If you wish to respond to all tooltip data updates, you can instead replace
+-- the enum with 'TooltipDataProcessor.AllTypes' (or the string "ALL").
 
 local function InitFrame()
+  TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Item, ModifyItemTooltip)
 
-	GameTooltip:HookScript( "OnTooltipSetItem", ModifyItemTooltip )
+	--GameTooltip:HookScript( "OnTooltipSetItem", ModifyItemTooltip )
 	--ItemRefTooltip:HookScript( "OnTooltipSetItem", ModifyItemTooltip )
 end
 
