@@ -1,5 +1,41 @@
 local _, ItemProfConstants = ...
 
+local L = setmetatable({}, {__index = function(t, k) return k end, __call = function(t, k) return t[k] end})
+if GetLocale() == "zhTW" then
+	L[" Enable Profession Icons"] = "啟用專業圖示"
+	L["If enabled profession icons will be displayed on items that are crafting materials"] = "啟用後，會在可為專業技能提供材料的物品上顯示專業圖示"
+	L[" Cooking"] = "烹飪"
+	L[" First Aid"] = "急救"
+	L[" Alchemy"] = "鍊金術"
+	L[" Blacksmithing"] = "鍛造"
+	L[" Enchanting"] = "附魔"
+	L[" Engineering"] = "工程學"
+	L[" Leatherworking"] = "製皮"
+	L[" Tailoring"] = "裁縫"
+	L[" Jewelcrafting"] = "珠寶設計"
+	L[" Enable Quest Icons"] = "啟用任務圖示"
+	L["If enabled quest icons will be displayed on items that are needed by quests"] = "啟用後，會在任務所需物品上顯示任務圖示"
+	L[" Alliance"] = "聯盟"
+	L[" Horde"] = "部落"
+	L["Class Quests"] = "職業任務"
+	L[" Druid"] = "德魯伊"
+	L[" Hunter"] = "獵人"
+	L[" Mage"] = "法師"
+	L[" Paladin"] = "聖騎士"
+	L[" Priest"] = "牧師"
+	L[" Rogue"] = "盜賊"
+	L[" Shaman"] = "薩滿"
+	L[" Warlock"] = "術士"
+	L[" Warrior"] = "戰士"
+	L["Profession Quests"] = "專業任務"
+	L["Icon Size"] = "圖示大小"
+	L[" Vendor Items"] = "商人販售物品"
+	L["Display icons on items sold by vendors"] = "在商人販售的物品上顯示圖示"
+	L[" Darkmoon Faire Ticket Items"] = "暗月馬戲團兌換券物品"
+	L["Display a ticket icon if the item can be exchanged for Darkmoon Faire tickets"] = "若物品可兌換暗月馬戲團兌換券，則顯示票券圖示"
+	L["These options allow you control which icons are displayed on the item tooltips.\nThe quest icon can be filtered to display on items needed for quests of specific class/profession."] = "這些選項可讓你控制物品提示上顯示哪些圖示。\n任務圖示可篩選為只顯示特定職業／專業任務所需的物品。"
+end
+
 local frame = CreateFrame( "Frame" )
 frame.name = "ItemTooltipIconConfig"
 
@@ -32,6 +68,11 @@ local userVariables
 
 
 local function SaveAndQuit() 
+
+	if userVariables == nil then
+		-- Config not initialized yet; bail out safely to avoid a nil-indexed crash.
+		return
+	end
 
 	local profFlags = 0
 	-- Ignore the profession flags if master profession checkbox is unchecked
@@ -203,7 +244,7 @@ end
 
 local function CreateProfessionWidgets() 
 
-	profsCheck = CreateCheckbox( "ItemTooltipIconsConfigCheck0", 20, -50, " Enable Profession Icons", "If enabled profession icons will be displayed on items that are crafting materials" )
+	profsCheck = CreateCheckbox( "ItemTooltipIconsConfigCheck0", 20, -50, L(" Enable Profession Icons"), L("If enabled profession icons will be displayed on items that are crafting materials") )
 	profsCheck:SetScript( "OnClick", ToggleProfCheckbox )
 
 	-- Checkbox alignment offsets
@@ -213,20 +254,20 @@ local function CreateProfessionWidgets()
 	local y0 = -70
 	local dy = -20
 
-	PROF_CHECK[ 1 ] = CreateCheckbox( "ItemTooltipIconsConfigCheck0a", x0, y0+(2*dy), " Cooking", nil )
-	PROF_CHECK[ 2 ] = CreateCheckbox( "ItemTooltipIconsConfigCheck0b", x1, y0+(2*dy), " First Aid", nil )
-	PROF_CHECK[ 4 ] = CreateCheckbox( "ItemTooltipIconsConfigCheck0c", x0, y0, " Alchemy", nil )
-	PROF_CHECK[ 8 ] = CreateCheckbox( "ItemTooltipIconsConfigCheck0d", x0, y0+dy, " Blacksmithing", nil )
-	PROF_CHECK[ 16 ] = CreateCheckbox( "ItemTooltipIconsConfigCheck0e", x1, y0, " Enchanting", nil )
-	PROF_CHECK[ 32 ] = CreateCheckbox( "ItemTooltipIconsConfigCheck0f", x1, y0+dy, " Engineering", nil )
-	PROF_CHECK[ 64 ] = CreateCheckbox( "ItemTooltipIconsConfigCheck0g", x2, y0+dy, " Leatherworking", nil )
-	PROF_CHECK[ 128 ] = CreateCheckbox( "ItemTooltipIconsConfigCheck0h", x2, y0+(2*dy), " Tailoring", nil )
-	PROF_CHECK[ 256 ] = CreateCheckbox( "ItemTooltipIconsConfigCheck0i", x2, y0, " Jewelcrafting", nil )
+	PROF_CHECK[ 1 ] = CreateCheckbox( "ItemTooltipIconsConfigCheck0a", x0, y0+(2*dy), L(" Cooking"), nil )
+	PROF_CHECK[ 2 ] = CreateCheckbox( "ItemTooltipIconsConfigCheck0b", x1, y0+(2*dy), L(" First Aid"), nil )
+	PROF_CHECK[ 4 ] = CreateCheckbox( "ItemTooltipIconsConfigCheck0c", x0, y0, L(" Alchemy"), nil )
+	PROF_CHECK[ 8 ] = CreateCheckbox( "ItemTooltipIconsConfigCheck0d", x0, y0+dy, L(" Blacksmithing"), nil )
+	PROF_CHECK[ 16 ] = CreateCheckbox( "ItemTooltipIconsConfigCheck0e", x1, y0, L(" Enchanting"), nil )
+	PROF_CHECK[ 32 ] = CreateCheckbox( "ItemTooltipIconsConfigCheck0f", x1, y0+dy, L(" Engineering"), nil )
+	PROF_CHECK[ 64 ] = CreateCheckbox( "ItemTooltipIconsConfigCheck0g", x2, y0+dy, L(" Leatherworking"), nil )
+	PROF_CHECK[ 128 ] = CreateCheckbox( "ItemTooltipIconsConfigCheck0h", x2, y0+(2*dy), L(" Tailoring"), nil )
+	PROF_CHECK[ 256 ] = CreateCheckbox( "ItemTooltipIconsConfigCheck0i", x2, y0, L(" Jewelcrafting"), nil )
 end
 
 local function CreateQuestWidgets() 
 	
-	questCheck = CreateCheckbox( "ItemTooltipIconsConfigCheck1", 20, -180, " Enable Quest Icons", "If enabled quest icons will be displayed on items that are needed by quests" )
+	questCheck = CreateCheckbox( "ItemTooltipIconsConfigCheck1", 20, -180, L(" Enable Quest Icons"), L("If enabled quest icons will be displayed on items that are needed by quests") )
 	questCheck:SetScript( "OnClick", ToggleQuestCheckbox )
 
 	local x0 = 45
@@ -235,27 +276,27 @@ local function CreateQuestWidgets()
 	local y0 = -200
 	local dy = -20
 	
-	QUEST_CHECK[ 0x00002 ] = CreateCheckbox( "ItemTooltipIconsConfigCheck1b", x0, y0, " Alliance", nil )
-	QUEST_CHECK[ 0x00004 ] = CreateCheckbox( "ItemTooltipIconsConfigCheck1c", x0, y0+dy, " Horde", nil )
+	QUEST_CHECK[ 0x00002 ] = CreateCheckbox( "ItemTooltipIconsConfigCheck1b", x0, y0, L(" Alliance"), nil )
+	QUEST_CHECK[ 0x00004 ] = CreateCheckbox( "ItemTooltipIconsConfigCheck1c", x0, y0+dy, L(" Horde"), nil )
 
 
 	classQuestLabel = frame:CreateFontString( "ClassQuestLabel", "OVERLAY", "GameTooltipText" )
 	classQuestLabel:SetFont( "Fonts\\FRIZQT__.TTF", 14, "THINOUTLINE" )
 	classQuestLabel:SetPoint( "TOPLEFT", x0, -255 )
 	classQuestLabel:SetTextColor( 1, 0.85, 0.15 )
-	classQuestLabel:SetText( "Class Quests" )
+	classQuestLabel:SetText( L("Class Quests") )
 
 	y0 = -270
 	
-	QUEST_CHECK[ 0x00008 ] = CreateCheckbox( "ItemTooltipIconsConfigCheck1d1", x0, y0, " Druid", nil )
-	QUEST_CHECK[ 0x00010 ] = CreateCheckbox( "ItemTooltipIconsConfigCheck1d2", x0, y0+dy, " Hunter", nil )
-	QUEST_CHECK[ 0x00020 ] = CreateCheckbox( "ItemTooltipIconsConfigCheck1d3", x0, y0+(2*dy), " Mage", nil )
-	QUEST_CHECK[ 0x00040 ] = CreateCheckbox( "ItemTooltipIconsConfigCheck1d4", x1, y0, " Paladin", nil )
-	QUEST_CHECK[ 0x00080 ] = CreateCheckbox( "ItemTooltipIconsConfigCheck1d5", x1, y0+dy, " Priest", nil )
-	QUEST_CHECK[ 0x00100 ] = CreateCheckbox( "ItemTooltipIconsConfigCheck1d6", x1, y0+(2*dy), " Rogue", nil )
-	QUEST_CHECK[ 0x00200 ] = CreateCheckbox( "ItemTooltipIconsConfigCheck1d7", x2, y0, " Shaman", nil )
-	QUEST_CHECK[ 0x00400 ] = CreateCheckbox( "ItemTooltipIconsConfigCheck1d8", x2, y0+dy, " Warlock", nil )
-	QUEST_CHECK[ 0x00800 ] = CreateCheckbox( "ItemTooltipIconsConfigCheck1d9", x2, y0+(2*dy), " Warrior", nil )
+	QUEST_CHECK[ 0x00008 ] = CreateCheckbox( "ItemTooltipIconsConfigCheck1d1", x0, y0, L(" Druid"), nil )
+	QUEST_CHECK[ 0x00010 ] = CreateCheckbox( "ItemTooltipIconsConfigCheck1d2", x0, y0+dy, L(" Hunter"), nil )
+	QUEST_CHECK[ 0x00020 ] = CreateCheckbox( "ItemTooltipIconsConfigCheck1d3", x0, y0+(2*dy), L(" Mage"), nil )
+	QUEST_CHECK[ 0x00040 ] = CreateCheckbox( "ItemTooltipIconsConfigCheck1d4", x1, y0, L(" Paladin"), nil )
+	QUEST_CHECK[ 0x00080 ] = CreateCheckbox( "ItemTooltipIconsConfigCheck1d5", x1, y0+dy, L(" Priest"), nil )
+	QUEST_CHECK[ 0x00100 ] = CreateCheckbox( "ItemTooltipIconsConfigCheck1d6", x1, y0+(2*dy), L(" Rogue"), nil )
+	QUEST_CHECK[ 0x00200 ] = CreateCheckbox( "ItemTooltipIconsConfigCheck1d7", x2, y0, L(" Shaman"), nil )
+	QUEST_CHECK[ 0x00400 ] = CreateCheckbox( "ItemTooltipIconsConfigCheck1d8", x2, y0+dy, L(" Warlock"), nil )
+	QUEST_CHECK[ 0x00800 ] = CreateCheckbox( "ItemTooltipIconsConfigCheck1d9", x2, y0+(2*dy), L(" Warrior"), nil )
 
 
 
@@ -263,20 +304,20 @@ local function CreateQuestWidgets()
 	profQuestLabel:SetFont( "Fonts\\FRIZQT__.TTF", 14, "THINOUTLINE" )
 	profQuestLabel:SetPoint( "TOPLEFT", x0, -345 )
 	profQuestLabel:SetTextColor( 1, 0.85, 0.15 )
-	profQuestLabel:SetText( "Profession Quests" )
+	profQuestLabel:SetText( L("Profession Quests") )
 
 	
 	y0 = -360
 	
-	QUEST_CHECK[ 0x001000 ] = CreateCheckbox( "ItemTooltipIconsConfigCheck1e1", x0, y0+(2*dy), " Cooking", nil )
-	QUEST_CHECK[ 0x002000 ] = CreateCheckbox( "ItemTooltipIconsConfigCheck1e2", x1, y0+(2*dy), " First Aid", nil )
-	QUEST_CHECK[ 0x004000 ] = CreateCheckbox( "ItemTooltipIconsConfigCheck1e3", x0, y0, " Alchemy", nil )
-	QUEST_CHECK[ 0x008000 ] = CreateCheckbox( "ItemTooltipIconsConfigCheck1e4", x0, y0+dy, " Blacksmithing", nil )
-	QUEST_CHECK[ 0x010000 ] = CreateCheckbox( "ItemTooltipIconsConfigCheck1e5", x1, y0, " Enchanting", nil )
-	QUEST_CHECK[ 0x020000 ] = CreateCheckbox( "ItemTooltipIconsConfigCheck1e6", x1, y0+dy, " Engineering", nil )
-	QUEST_CHECK[ 0x040000 ] = CreateCheckbox( "ItemTooltipIconsConfigCheck1e7", x2, y0+dy, " Leatherworking", nil )
-	QUEST_CHECK[ 0x080000 ] = CreateCheckbox( "ItemTooltipIconsConfigCheck1e8", x2, y0+(2*dy), " Tailoring", nil )
-	QUEST_CHECK[ 0x100000 ] = CreateCheckbox( "ItemTooltipIconsConfigCheck1e9", x2, y0, " Jewelcrafting", nil )
+	QUEST_CHECK[ 0x001000 ] = CreateCheckbox( "ItemTooltipIconsConfigCheck1e1", x0, y0+(2*dy), L(" Cooking"), nil )
+	QUEST_CHECK[ 0x002000 ] = CreateCheckbox( "ItemTooltipIconsConfigCheck1e2", x1, y0+(2*dy), L(" First Aid"), nil )
+	QUEST_CHECK[ 0x004000 ] = CreateCheckbox( "ItemTooltipIconsConfigCheck1e3", x0, y0, L(" Alchemy"), nil )
+	QUEST_CHECK[ 0x008000 ] = CreateCheckbox( "ItemTooltipIconsConfigCheck1e4", x0, y0+dy, L(" Blacksmithing"), nil )
+	QUEST_CHECK[ 0x010000 ] = CreateCheckbox( "ItemTooltipIconsConfigCheck1e5", x1, y0, L(" Enchanting"), nil )
+	QUEST_CHECK[ 0x020000 ] = CreateCheckbox( "ItemTooltipIconsConfigCheck1e6", x1, y0+dy, L(" Engineering"), nil )
+	QUEST_CHECK[ 0x040000 ] = CreateCheckbox( "ItemTooltipIconsConfigCheck1e7", x2, y0+dy, L(" Leatherworking"), nil )
+	QUEST_CHECK[ 0x080000 ] = CreateCheckbox( "ItemTooltipIconsConfigCheck1e8", x2, y0+(2*dy), L(" Tailoring"), nil )
+	QUEST_CHECK[ 0x100000 ] = CreateCheckbox( "ItemTooltipIconsConfigCheck1e9", x2, y0, L(" Jewelcrafting"), nil )
 end
 
 local function CreateIconResizeWidgets()
@@ -289,7 +330,7 @@ local function CreateIconResizeWidgets()
 	iconSizeSlider:SetWidth( 200 )
 	iconSizeSlider:SetObeyStepOnDrag( true )
 	iconSizeSlider:SetScript( "OnValueChanged", IconSizeChanged )
-	_G[ "ItemTooltipIconsConfigSlider0Text" ]:SetText( "Icon Size" )
+	_G[ "ItemTooltipIconsConfigSlider0Text" ]:SetText( L("Icon Size") )
 	_G[ "ItemTooltipIconsConfigSlider0Low" ]:SetText( nil )
 	_G[ "ItemTooltipIconsConfigSlider0High" ]:SetText( nil )
 
@@ -306,13 +347,13 @@ end
 local dialogHeader = frame:CreateFontString( nil, "OVERLAY", "GameTooltipText" )
 dialogHeader:SetFont( "Fonts\\FRIZQT__.TTF", 10, "THINOUTLINE" )
 dialogHeader:SetPoint( "TOPLEFT", 20, -20 )
-dialogHeader:SetText( "These options allow you control which icons are displayed on the item tooltips.\nThe quest icon can be filtered to display on items needed for quests of specific class/profession." )
+dialogHeader:SetText( L("These options allow you control which icons are displayed on the item tooltips.\nThe quest icon can be filtered to display on items needed for quests of specific class/profession.") )
 
 
 CreateProfessionWidgets()
 CreateQuestWidgets()
-vendorCheck = CreateCheckbox( "ItemTooltipIconsConfigCheck2", 20, -470, " Vendor Items", "Display icons on items sold by vendors" )
-dmfCheck = CreateCheckbox( "ItemTooltipIconsConfigCheck3", 20, -490, " Darkmoon Faire Ticket Items", "Display a ticket icon if the item can be exchanged for Darkmoon Faire tickets" )
+vendorCheck = CreateCheckbox( "ItemTooltipIconsConfigCheck2", 20, -470, L(" Vendor Items"), L("Display icons on items sold by vendors") )
+dmfCheck = CreateCheckbox( "ItemTooltipIconsConfigCheck3", 20, -490, L(" Darkmoon Faire Ticket Items"), L("Display a ticket icon if the item can be exchanged for Darkmoon Faire tickets") )
 CreateIconResizeWidgets()
 
 
