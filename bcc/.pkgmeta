@@ -1,5 +1,6 @@
 ignore:
   - classic
+  - forever
   - retail
   - wrath
   - README.md
