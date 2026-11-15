@@ -1,5 +1,6 @@
 ignore:
   - bcc
+  - forever
   - retail
   - wrath
   - README.md
