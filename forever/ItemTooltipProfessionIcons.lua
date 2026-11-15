@@ -1,99 +1,45 @@
 local _, ItemProfConstants = ...
 
-local frame = CreateFrame( "Frame" )
-
 local previousItemID = -1
-local itemIcons = ""
-local iconSize
+local itemIcons
 
-local ITEM_VENDOR_FLAG = ItemProfConstants.VENDOR_ITEM_FLAG
-local ITEM_DMF_FLAG = ItemProfConstants.DMF_ITEM_FLAG
 local ITEM_PROF_FLAGS = ItemProfConstants.ITEM_PROF_FLAGS
-local QUEST_FLAG = ItemProfConstants.QUEST_FLAG
-local NUM_PROFS_TRACKED = ItemProfConstants.NUM_PROF_FLAGS
 local PROF_TEXTURES = ItemProfConstants.PROF_TEXTURES
+local NUM_PROFS
 
-local showProfs
+local iconSize
+local QUEST_TEXT
+local CRATE_TEXT
+
+-- Ordered list of { flag, texture } entries used to build the icon line,
+-- rebuilt by ConfigChanged (professions, then vendor, then Waylaid Crate)
+local iconFilter
+
 local showQuests
 local profFilter
 local questFilter
-local includeVendor
-local showDMF
 
-ItemProfConstants.configTooltipIconsRealm = GetRealmName()
-ItemProfConstants.configTooltipIconsChar = UnitName( "player" )
+local t = {}
 
 
 
 local function CreateItemIcons( itemFlags )
 
-	
-	if not includeVendor then
-		-- Return if the item has the vendor flag
-		local isVendor = bit.band( itemFlags, ITEM_VENDOR_FLAG )
-		if isVendor ~= 0 then
-			return nil
-		end
-	end
-	
-	
-	local t = {}
-	
-	if showProfs then
-	
-		local enabledFlags = bit.band( itemFlags, profFilter )
-		for i=0, NUM_PROFS_TRACKED-1 do
-			local bitMask = bit.lshift( 1, i )
-			local isSet = bit.band( enabledFlags, bitMask )
-			if isSet ~= 0 then
-				t[ #t+1 ] = "|T"
-				t[ #t+1 ] = PROF_TEXTURES[ bitMask ]
-				t[ #t+1 ] = ":"
-				t[ #t+1 ] = iconSize
-				t[ #t+1 ] = "|t "
+	for i=1, #t do t[ i ] = nil end
+
+	local profFlags = bit.band( itemFlags, profFilter )
+	if profFlags ~= 0 then
+		for _, entry in ipairs( iconFilter ) do
+			if bit.band( profFlags, entry.flag ) ~= 0 then
+				t[ #t+1 ] = entry.texture
 			end
 		end
 	end
-	
-	if showDMF then
-	
-		local isTicketItem = bit.band( itemFlags, ITEM_DMF_FLAG )
-		if isTicketItem ~= 0 then
-			t[ #t+1 ] = "|T"
-			t[ #t+1 ] = PROF_TEXTURES[ ITEM_DMF_FLAG ]
-			t[ #t+1 ] = ":"
-			t[ #t+1 ] = iconSize
-			t[ #t+1 ] = "|t "
-		end
-	end
-	
+
 	if showQuests then
-		-- Quest filter flags start at 0x200, shift to bit 0 will align with config filter
-		local questFlags = bit.rshift( itemFlags, 9 )
-		local isSet = bit.band( questFlags, questFilter )
-		
-		-- Check if the quest is faction exclusive
-		local isFactionQuest = bit.band( questFlags, 0x06 )
-		if isFactionQuest ~= 0 then
-			-- Ignore the quest if the configuration isnt tracking this faction
-			local isFactionEnabled = bit.band( isFactionQuest, questFilter )
-			local showFaction = bit.band( isFactionQuest, isFactionEnabled )
-			if showFaction == 0 then
-				isSet = 0
-			end
-			
-			-- Both flags must be set if the faction quest was for a specific class/profession
-			if isSet < 0x08 and questFlags >= 0x08 then
-				isSet = 0
-			end
-		end
-		
-		if isSet ~= 0 then
-			t[ #t+1 ] = "|T"
-			t[ #t+1 ] = PROF_TEXTURES[ QUEST_FLAG ]
-			t[ #t+1 ] = ":"
-			t[ #t+1 ] = iconSize
-			t[ #t+1 ] = "|t "
+		local questFlags = bit.band( itemFlags, questFilter )
+		if questFlags ~= 0 then
+			t[ #t+1 ] = QUEST_TEXT
 		end
 	end
 
@@ -102,16 +48,20 @@ end
 
 
 local function ModifyItemTooltip( tt ) 
-		
-	local itemName, itemLink = tt:GetItem() 
-	if not itemName then return end
-	local itemID = select( 1, GetItemInfoInstant( itemName ) )
-	
+
+	local data = tt:GetPrimaryTooltipData()
+	if not data then return end
+	local itemID = data.id
 	if itemID == nil then
-		-- Extract ID from link: GetItemInfoInstant unreliable with AH items (uncached on client?)
-		itemID = tonumber( string.match( itemLink, "item:?(%d+):" ) )
+		-- Try get the ID from link/guid
+		local itemLink = data.hyperlink
+		local itemGuid = data.guid
+		if itemLink ~= nil then
+			itemID = tonumber( string.match( itemLink, "item:?(%d+):" ) )
+		elseif itemGuid ~= nil then
+			itemID = C_Item.GetItemIDByGUID( itemGuid )
+		end
 		if itemID == nil then
-			-- The item link doesn't contain the item ID field
 			return
 		end
 	end
@@ -125,7 +75,6 @@ local function ModifyItemTooltip( tt )
 	-- Check if the item is a profession reagent
 	local itemFlags = ITEM_PROF_FLAGS[ itemID ]
 	if itemFlags == nil then
-		-- Don't modify the tooltip
 		return
 	end
 	
@@ -137,25 +86,53 @@ local function ModifyItemTooltip( tt )
 end
 
 
-function ItemProfConstants:ConfigChanged()
+function ItemProfConstants:ConfigChanged( config )
 
-	showProfs = ItemTooltipIconsConfig[ ItemProfConstants.configTooltipIconsRealm ][ ItemProfConstants.configTooltipIconsChar ].showProfs
-	showQuests = ItemTooltipIconsConfig[ ItemProfConstants.configTooltipIconsRealm ][ ItemProfConstants.configTooltipIconsChar ].showQuests
-	profFilter = ItemTooltipIconsConfig[ ItemProfConstants.configTooltipIconsRealm ][ ItemProfConstants.configTooltipIconsChar ].profFlags
-	questFilter = ItemTooltipIconsConfig[ ItemProfConstants.configTooltipIconsRealm ][ ItemProfConstants.configTooltipIconsChar ].questFlags
-	includeVendor = ItemTooltipIconsConfig[ ItemProfConstants.configTooltipIconsRealm ][ ItemProfConstants.configTooltipIconsChar ].includeVendor
-	iconSize = ItemTooltipIconsConfig[ ItemProfConstants.configTooltipIconsRealm ][ ItemProfConstants.configTooltipIconsChar ].iconSize
-	showDMF = ItemTooltipIconsConfig[ ItemProfConstants.configTooltipIconsRealm ][ ItemProfConstants.configTooltipIconsChar ].showDMF
-	
+	showQuests = config.showQuests
+	profFilter = config.profFlags
+
+	NUM_PROFS = #PROF_TEXTURES - 1
+	-- Config stores quest flags aligned with lsb
+	questFilter = bit.lshift( config.questFlags, NUM_PROFS+1 ) -- offset vendor flag
+
+	-- Refresh the strings used in icon construction
+	if iconSize ~= config.iconSize then
+		iconSize = config.iconSize
+		local sizeStr = config.iconSize .. "|t "
+--		DMF_TEXT = "|T134481:" .. sizeStr
+		QUEST_TEXT = "|T132049:" .. sizeStr
+		CRATE_TEXT = "|T" .. ItemProfConstants.CRATE_ICON .. ":" .. sizeStr
+		for i=1, NUM_PROFS do
+			PROF_TEXTURES[ i ] = string.sub( PROF_TEXTURES[ i ], 1, 9 ) .. sizeStr
+		end
+		-- Vendor texture appended to profs
+		PROF_TEXTURES[ NUM_PROFS + 1 ] = "|A:SpellIcon-256x256-SellJunk:"..iconSize..":"..iconSize.."|a"
+	end
+
+	-- Merge vendor check/texture logic with professions
+	if config.includeVendor then
+		profFilter = profFilter + ItemProfConstants.VENDOR_ITEM_FLAG
+	end
+
+	-- Merge Waylaid Crate materials with professions
+	if config.includeCrate then
+		profFilter = profFilter + ItemProfConstants.CRATE_ITEM_FLAG
+	end
+
+	-- Rebuild the ordered flag/texture list (bit order: profs, vendor, crate)
+	iconFilter = {}
+	for i=1, NUM_PROFS do
+		iconFilter[ #iconFilter+1 ] = { flag = bit.lshift( 1, i-1 ), texture = PROF_TEXTURES[ i ] }
+	end
+	if config.includeVendor then
+		iconFilter[ #iconFilter+1 ] = { flag = ItemProfConstants.VENDOR_ITEM_FLAG, texture = PROF_TEXTURES[ NUM_PROFS + 1 ] }
+	end
+	if config.includeCrate then
+		iconFilter[ #iconFilter+1 ] = { flag = ItemProfConstants.CRATE_ITEM_FLAG, texture = CRATE_TEXT }
+	end
+
 	previousItemID = -1		-- Reset line
 end
 
 
-local function InitFrame()
-
-	GameTooltip:HookScript( "OnTooltipSetItem", ModifyItemTooltip )
-	--ItemRefTooltip:HookScript( "OnTooltipSetItem", ModifyItemTooltip )
-end
-
-
-InitFrame()
+TooltipDataProcessor.AddTooltipPostCall( Enum.TooltipDataType.Item, ModifyItemTooltip )
